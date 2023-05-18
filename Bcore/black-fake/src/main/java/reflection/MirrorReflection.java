@@ -328,7 +328,8 @@ public final class MirrorReflection {
         public T call(Object instance, Object... args) {
             try {
                 return (T) member.invoke(instance, args);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -346,7 +347,8 @@ public final class MirrorReflection {
         public T call(Object... args) {
             try {
                 return (T) member.invoke(null, args);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -364,7 +366,8 @@ public final class MirrorReflection {
         public T get(Object instance) {
             try {
                 return (T) member.get(instance);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
                 return null;
             }
         }
@@ -376,7 +379,8 @@ public final class MirrorReflection {
         public void set(Object instance, Object value) {
             try {
                 member.set(instance, value);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         }
 
@@ -397,7 +401,8 @@ public final class MirrorReflection {
         public T newInstance(Object... args) {
             try {
                 return member.newInstance(args);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
                 return null;
             }
         }

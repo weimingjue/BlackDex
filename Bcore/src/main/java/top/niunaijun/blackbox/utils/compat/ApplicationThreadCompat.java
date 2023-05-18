@@ -10,8 +10,8 @@ public class ApplicationThreadCompat {
 
     public static IInterface asInterface(IBinder binder) {
         if (BuildCompat.isOreo()) {
-            return IApplicationThreadOreo.Stub.asInterface.call(binder);
+            return IApplicationThreadOreo.Stub.asInterface.call(null, binder);
         }
-        return ApplicationThreadNative.asInterface.call(binder);
+        return ApplicationThreadNative.asInterface.call(null, binder);
     }
 }

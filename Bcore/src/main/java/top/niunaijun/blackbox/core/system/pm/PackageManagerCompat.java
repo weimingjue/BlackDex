@@ -20,9 +20,9 @@ import java.util.Set;
 import reflection.android.content.pm.ApplicationInfoL;
 import reflection.android.content.pm.ApplicationInfoN;
 import reflection.android.content.pm.SigningInfo;
-import top.niunaijun.blackbox.core.env.BEnvironment;
 import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.core.env.AppSystemEnv;
+import top.niunaijun.blackbox.core.env.BEnvironment;
 import top.niunaijun.blackbox.utils.ArrayUtils;
 import top.niunaijun.blackbox.utils.FileUtils;
 import top.niunaijun.blackbox.utils.compat.BuildCompat;
@@ -47,7 +47,8 @@ public class PackageManagerCompat {
             PackageInfo packageInfo = null;
             try {
                 packageInfo = generatePackageInfo(p, flags, 0, 0, state, userId);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
             return packageInfo;
         }

@@ -13,7 +13,6 @@ import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,14 +23,15 @@ import java.util.Objects;
 import reflection.android.app.ActivityThread;
 import reflection.android.app.ContextImpl;
 import reflection.android.app.LoadedApk;
+import reflection.android.security.net.config.ApplicationConfig;
+import top.niunaijun.blackbox.BlackBoxCore;
 import top.niunaijun.blackbox.core.IBActivityThread;
+import top.niunaijun.blackbox.core.IOCore;
 import top.niunaijun.blackbox.core.VMCore;
 import top.niunaijun.blackbox.entity.AppConfig;
-import top.niunaijun.blackbox.core.IOCore;
 import top.niunaijun.blackbox.entity.dump.DumpResult;
 import top.niunaijun.blackbox.utils.FileUtils;
 import top.niunaijun.blackbox.utils.Slog;
-import top.niunaijun.blackbox.BlackBoxCore;
 
 /**
  * Created by Milk on 3/31/21.
@@ -189,7 +189,17 @@ public class BActivityThread extends IBActivityThread.Stub {
             BlackBoxCore.get().getAppLifecycleCallback().beforeCreateApplication(packageName, processName, packageContext);
             try {
                 ClassLoader call = LoadedApk.getClassloader.call(loadedApk);
+
+                //由于LoadedApk.makeApplication>NetworkSecurityConfigProvider.handleNewApplication会对明文网络判断导致崩溃
+                //所以此处先设置为null
+                Object config = ApplicationConfig.getDefaultInstance.call(null);
+                ApplicationConfig.setDefaultInstance.call(null, (Object) null);
+
                 application = LoadedApk.makeApplication.call(loadedApk, false, null);
+
+                if (ApplicationConfig.getDefaultInstance.call(null) == null) {
+                    ApplicationConfig.setDefaultInstance.call(null, config);
+                }
             } catch (Throwable e) {
                 Slog.e(TAG, "Unable to makeApplication");
                 e.printStackTrace();
